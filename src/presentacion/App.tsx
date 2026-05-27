@@ -39,6 +39,14 @@ export const App: React.FC = () => {
     enviarNuevaResena,
     enlaceWhatsAppInformativo,
     obtenerEnlaceWhatsAppPedidoEspecifico,
+    
+    // Tour del Inversionista
+    tourActivo,
+    pasoTour,
+    iniciarTour,
+    detenerTour,
+    siguientePasoTour,
+    anteriorPasoTour
   } = useNutriArvi();
 
   return (
@@ -55,15 +63,40 @@ export const App: React.FC = () => {
         onChangePestana={setPestanaActiva}
       />
 
-      {/* Asistente Virtual: Arvejito explicativo */}
-      <AsistenteMascota pestanaActiva={pestanaActiva} />
+      {/* Botón de Inicio de Tour interactivo del inversor */}
+      <div style={estilos.contenedorTourAccion}>
+        <button
+          onClick={tourActivo ? detenerTour : iniciarTour}
+          className="boton-interactivo"
+          style={{
+            ...estilos.botonTour,
+            background: tourActivo ? '#D93838' : 'var(--verde-arveja)',
+            boxShadow: tourActivo ? '0 4px 15px rgba(217, 56, 56, 0.25)' : '0 4px 15px rgba(133, 178, 50, 0.25)'
+          }}
+          id="boton-iniciar-tour-inversor"
+        >
+          {tourActivo ? "❌ Detener Tour de Inversión" : "🌱 ¡Iniciar Tour de Venta e Inversión con Arvejito!"}
+        </button>
+      </div>
 
-      {/* Renderizado Dinámico de la Pestaña Activa */}
+      {/* Asistente Virtual: Arvejito explicativo */}
+      <AsistenteMascota
+        pestanaActiva={pestanaActiva}
+        tourActivo={tourActivo}
+        pasoTour={pasoTour}
+        onSiguiente={siguientePasoTour}
+        onAnterior={anteriorPasoTour}
+        onDetener={detenerTour}
+      />
+
+      {/* Renderizado Dinámico de la Pestaña Activa con Props de Tour */}
       <main style={estilos.main}>
         {pestanaActiva === 'balance' && (
           <TabBalanceMateria
             balanceLote={balanceLote}
             galletaEstandar={galletaEstandar}
+            tourActivo={tourActivo}
+            pasoTour={pasoTour}
           />
         )}
 
@@ -72,12 +105,16 @@ export const App: React.FC = () => {
             listaIngredientes={listaIngredientes}
             costoTotalIngredientes={costoTotalIngredientes}
             pesoTotalIngredientes={pesoTotalIngredientes}
+            tourActivo={tourActivo}
+            pasoTour={pasoTour}
           />
         )}
 
         {pestanaActiva === 'costos' && (
           <TabCostos
             desgloseCostosUnitarios={desgloseCostosUnitarios}
+            tourActivo={tourActivo}
+            pasoTour={pasoTour}
           />
         )}
 
@@ -88,11 +125,13 @@ export const App: React.FC = () => {
             setVolumenSimulado={setVolumenSimulado}
             proyeccionSimulada={proyeccionSimulada}
             obtenerEnlaceWhatsAppPedidoEspecifico={obtenerEnlaceWhatsAppPedidoEspecifico}
+            tourActivo={tourActivo}
+            pasoTour={pasoTour}
           />
         )}
       </main>
 
-      {/* Sección de Reseñas de Clientes (Siempre visible abajo, como pidió el usuario) */}
+      {/* Sección de Reseñas de Clientes */}
       <SeccionResenas
         listaResenas={listaResenas}
         calificacionPromedio={calificacionPromedio}
@@ -107,13 +146,13 @@ export const App: React.FC = () => {
         enviarNuevaResena={enviarNuevaResena}
       />
 
-      {/* Sección de Acordeones Legales (Términos, Privacidad, Datos planta) */}
+      {/* Sección de Acordeones Legales */}
       <SeccionDocumentos />
 
       {/* Pie de Página */}
       <PiePagina />
 
-      {/* Botón Flotante de WhatsApp para Consulta Rápida */}
+      {/* Botón Flotante de WhatsApp */}
       <BotonFlotanteWhatsApp enlaceWhatsApp={enlaceWhatsAppInformativo} />
     </div>
   );
@@ -124,6 +163,23 @@ const estilos = {
     display: 'flex',
     flexDirection: 'column' as const,
     minHeight: '100vh',
+  },
+  contenedorTourAccion: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: '0 auto 15px auto',
+    padding: '0 20px',
+    width: '100%',
+    maxWidth: '1200px',
+  },
+  botonTour: {
+    color: 'var(--blanco-puro)',
+    fontWeight: '800',
+    fontSize: '0.95rem',
+    padding: '12px 24px',
+    borderRadius: 'var(--radio-circular)',
+    transition: 'var(--transicion-rapida)',
   },
   main: {
     flexGrow: 1,

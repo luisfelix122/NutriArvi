@@ -5,12 +5,16 @@ interface TabFormulacionProps {
   listaIngredientes: Ingrediente[];
   costoTotalIngredientes: number;
   pesoTotalIngredientes: number;
+  tourActivo?: boolean;
+  pasoTour?: number;
 }
 
 export const TabFormulacion: React.FC<TabFormulacionProps> = ({
   listaIngredientes,
   costoTotalIngredientes,
   pesoTotalIngredientes,
+  tourActivo,
+  pasoTour,
 }) => {
   return (
     <div className="animar-aparicion" style={estilos.contenedor} id="seccion-formulacion">
@@ -27,7 +31,11 @@ export const TabFormulacion: React.FC<TabFormulacionProps> = ({
               <span style={estilos.resumenLabel}>PESO TOTAL MEZCLA</span>
               <strong style={estilos.resumenValorGreen}>{pesoTotalIngredientes} gramos</strong>
             </div>
-            <div style={estilos.bloqueResumen}>
+            <div
+              style={estilos.bloqueResumen}
+              className={tourActivo && pasoTour === 4 ? 'tour-resaltado' : ''}
+              id="cuadro-costo-ingredientes"
+            >
               <span style={estilos.resumenLabel}>COSTO INGREDIENTES</span>
               <strong style={estilos.resumenValorPink}>S/ {costoTotalIngredientes.toFixed(2)}</strong>
             </div>
@@ -48,8 +56,8 @@ export const TabFormulacion: React.FC<TabFormulacionProps> = ({
             <tbody>
               {listaIngredientes.map((ingrediente, index) => {
                 const porcentajePeso = (ingrediente.cantidadGramos / pesoTotalIngredientes) * 100;
-                // Destacar la Harina de Arveja (base nutricional) con colores verdes
                 const esBaseNutricional = ingrediente.nombre.includes("Arveja");
+                const esPasoHarinaArveja = tourActivo && pasoTour === 3 && esBaseNutricional;
                 
                 return (
                   <tr
@@ -58,6 +66,8 @@ export const TabFormulacion: React.FC<TabFormulacionProps> = ({
                       ...estilos.fila,
                       ...(esBaseNutricional ? estilos.filaDestacada : {}),
                     }}
+                    className={esPasoHarinaArveja ? 'tour-resaltado' : ''}
+                    id={esBaseNutricional ? 'fila-harina-arveja' : `fila-insumo-${index}`}
                   >
                     <td style={estilos.tdIngrediente}>
                       <div style={estilos.bloqueNombre}>
@@ -175,6 +185,7 @@ const estilos = {
     display: 'flex',
     flexDirection: 'column' as const,
     alignItems: 'center',
+    transition: 'var(--transicion-suave)',
   },
   resumenLabel: {
     fontSize: '0.65rem',
@@ -227,7 +238,7 @@ const estilos = {
   },
   fila: {
     borderBottom: '1px solid var(--chocolate-claro)',
-    transition: 'var(--transicion-rapida)',
+    transition: 'var(--transicion-suave)',
   },
   filaDestacada: {
     background: 'var(--verde-arveja-claro)',
@@ -296,16 +307,6 @@ const estilos = {
     borderRadius: 'var(--radio-medio)',
     padding: '20px',
     textAlign: 'left' as const,
-    '& h4': {
-      color: 'var(--verde-arveja)',
-      fontSize: '1.05rem',
-      fontWeight: '700',
-      marginBottom: '8px',
-    },
-    '& p': {
-      fontSize: '0.85rem',
-      color: 'var(--chocolate-oscuro)',
-    },
   },
   tarjetaInfoRosa: {
     background: 'var(--rosa-claro)',
@@ -313,16 +314,6 @@ const estilos = {
     borderRadius: 'var(--radio-medio)',
     padding: '20px',
     textAlign: 'left' as const,
-    '& h4': {
-      color: 'var(--rosa-brillante)',
-      fontSize: '1.05rem',
-      fontWeight: '700',
-      marginBottom: '8px',
-    },
-    '& p': {
-      fontSize: '0.85rem',
-      color: 'var(--chocolate-oscuro)',
-    },
   },
 };
 

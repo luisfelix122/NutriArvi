@@ -7,6 +7,8 @@ interface TabProyeccionesProps {
   setVolumenSimulado: (volumen: number) => void;
   proyeccionSimulada: Proyeccion;
   obtenerEnlaceWhatsAppPedidoEspecifico: (bolsas: number) => string;
+  tourActivo?: boolean;
+  pasoTour?: number;
 }
 
 export const TabProyecciones: React.FC<TabProyeccionesProps> = ({
@@ -15,6 +17,8 @@ export const TabProyecciones: React.FC<TabProyeccionesProps> = ({
   setVolumenSimulado,
   proyeccionSimulada,
   obtenerEnlaceWhatsAppPedidoEspecifico,
+  tourActivo,
+  pasoTour,
 }) => {
   const esUtilidadPositiva = proyeccionSimulada.utilidadNeta > 0;
   const esEquilibrioExacto = proyeccionSimulada.utilidadNeta === 0;
@@ -36,6 +40,7 @@ export const TabProyecciones: React.FC<TabProyeccionesProps> = ({
               {escenariosFinancierosFijos.map((escenario, index) => {
                 const esEquilibrio = escenario.volumenBolsas === 236;
                 const esOptimista = escenario.volumenBolsas === 650;
+                const esPasoEquilibrio = tourActivo && pasoTour === 7 && esEquilibrio;
                 
                 return (
                   <div
@@ -45,6 +50,8 @@ export const TabProyecciones: React.FC<TabProyeccionesProps> = ({
                       ...(esEquilibrio ? estilos.escenarioItemEquilibrio : {}),
                       ...(esOptimista ? estilos.escenarioItemOptimista : {})
                     }}
+                    className={esPasoEquilibrio ? 'tour-resaltado' : ''}
+                    id={esEquilibrio ? 'cuadro-escenario-equilibrio' : `cuadro-escenario-${index}`}
                   >
                     <div style={estilos.escenarioEncabezado}>
                       <span style={{
@@ -94,7 +101,11 @@ export const TabProyecciones: React.FC<TabProyeccionesProps> = ({
 
         {/* Lado Derecho: Calculadora Interactiva Deslizante */}
         <div style={estilos.columnaCalculadora}>
-          <div className="tarjeta-premium" style={estilos.tarjetaCalculadora}>
+          <div
+            className={`tarjeta-premium ${tourActivo && pasoTour === 8 ? 'tour-resaltado' : ''}`}
+            style={estilos.tarjetaCalculadora}
+            id="tarjeta-calculadora-simulador"
+          >
             <div style={estilos.cabeceraTarjeta}>
               <span style={estilos.icono}>🧮</span>
               <h3 style={estilos.tituloTarjeta}>Simulador Dinámico de Venta</h3>
@@ -232,6 +243,7 @@ const estilos = {
   tarjetaCalculadora: {
     display: 'flex',
     flexDirection: 'column' as const,
+    transition: 'var(--transicion-suave)',
   },
   cabeceraTarjeta: {
     display: 'flex',
@@ -266,10 +278,7 @@ const estilos = {
     borderRadius: 'var(--radio-medio)',
     padding: '20px',
     textAlign: 'left' as const,
-    transition: 'var(--transicion-rapida)',
-    '&:hover': {
-      transform: 'translateY(-2px)',
-    }
+    transition: 'var(--transicion-suave)',
   },
   escenarioItemEquilibrio: {
     borderColor: 'var(--chocolate-medio)',

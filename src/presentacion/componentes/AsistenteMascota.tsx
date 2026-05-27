@@ -2,11 +2,63 @@ import React from 'react';
 
 interface AsistenteMascotaProps {
   pestanaActiva: string;
+  tourActivo: boolean;
+  pasoTour: number;
+  onSiguiente: () => void;
+  onAnterior: () => void;
+  onDetener: () => void;
 }
 
-export const AsistenteMascota: React.FC<AsistenteMascotaProps> = ({ pestanaActiva }) => {
-  // Mensajes explicativos en español peruano para potenciales inversionistas
-  const obtenerMensajeExplicativo = () => {
+export const AsistenteMascota: React.FC<AsistenteMascotaProps> = ({
+  pestanaActiva,
+  tourActivo,
+  pasoTour,
+  onSiguiente,
+  onAnterior,
+  onDetener,
+}) => {
+  // Textos e instrucciones del Tour interactivo para inversores
+  const MENSAJES_TOUR = [
+    {
+      titulo: "1. Mezcla de Masa Bruta 🥣",
+      texto: "¡Hola! Iniciemos nuestro tour de inversión en Piura. Primero, mezclamos todos los insumos sólidos y líquidos, obteniendo exactamente 878.00 gramos de masa bruta por lote de producción."
+    },
+    {
+      titulo: "2. La Merma en Horneado 🔥",
+      texto: "Al hornear, las galletas pierden un 12% de su peso (-105.36 gramos) por deshidratación natural del agua. Esto es clave: garantiza la crocantez sin usar persevantes químicos."
+    },
+    {
+      titulo: "3. Rendimiento Comercial 📦",
+      texto: "Obtenemos una masa neta horneada total de 772.64 gramos por lote. Esto equivale a 90 mini galletas, las cuales empacamos en 10 bolsas de 9 unidades cada una. ¡Eficiencia del 100% sin saldos sobrantes!"
+    },
+    {
+      titulo: "4. Harina de Arveja (Insumo clave) 🌱",
+      texto: "¡Pasemos a la receta! La Harina de Arveja representa casi el 40% del peso del lote (350 g). Esto le da a NutriArvi un perfil proteico alto y natural, diferenciándonos en el mercado."
+    },
+    {
+      titulo: "5. Costo total de ingredientes 💰",
+      texto: "Preparamos un lote completo de ingredientes por apenas S/ 8.08. Gracias a la arveja y a compras mayoristas eficientes, logramos un costo de materia prima sumamente competitivo."
+    },
+    {
+      titulo: "6. Costo unitario de producción 📈",
+      texto: "¡Hablemos del costo unitario! Producir una bolsa de galletas cuesta S/ 1.57 en total (S/ 0.81 de receta, S/ 0.30 de bolsa y sticker, y S/ 0.47 de costos indirectos CIF como gas y luz)."
+    },
+    {
+      titulo: "7. Precio sugerido y margen neto 💸",
+      texto: "Al vender cada bolsa al PVP sugerido de S/ 2.00, aseguramos un margen neto de ganancia del 21.3% (equivalente a S/ 0.43 de ganancia neta por bolsa). ¡Excelente retorno unitario!"
+    },
+    {
+      titulo: "8. El Punto de Equilibrio mensual ⚖️",
+      texto: "¡Llegamos a las proyecciones! Nuestro punto de equilibrio mensual es bajísimo: solo necesitas vender 236 bolsas al mes (S/ 472.00 en ventas) para cubrir costos y empezar a generar utilidad neta."
+    },
+    {
+      titulo: "9. Escenarios y Simulador interactivo 🚀",
+      texto: "Vendiendo 650 bolsas mensuales obtienes S/ 369.80 de ganancia neta. Mueve el deslizador a tu gusto para simular tu inversión deseada. ¡Fin del tour! Pide ya tus galletas para abastecer tu proyección."
+    }
+  ];
+
+  // Mensaje estático convencional de pestaña
+  const obtenerMensajeExplicativoTab = () => {
     switch (pestanaActiva) {
       case 'balance':
         return (
@@ -45,27 +97,64 @@ export const AsistenteMascota: React.FC<AsistenteMascotaProps> = ({ pestanaActiv
     <div className="mascota-contenedor animar-mascota" id="asistente-arvejito">
       {/* Diálogo / Bocadillo de texto */}
       <div className="mascota-bocadillo">
-        <p className="mascota-texto">{obtenerMensajeExplicativo()}</p>
+        {tourActivo ? (
+          <div style={estilos.tourCuerpo}>
+            <div style={estilos.tourHeader}>
+              <strong style={estilos.tourTitulo}>{MENSAJES_TOUR[pasoTour].titulo}</strong>
+              <span style={estilos.tourPasoBadge}>Paso {pasoTour + 1} de 9</span>
+            </div>
+            <p className="mascota-texto" style={estilos.tourTexto}>{MENSAJES_TOUR[pasoTour].texto}</p>
+            
+            <div style={estilos.tourAcciones}>
+              <button
+                onClick={onAnterior}
+                disabled={pasoTour === 0}
+                style={{
+                  ...estilos.tourBotonSecundario,
+                  opacity: pasoTour === 0 ? 0.4 : 1,
+                  cursor: pasoTour === 0 ? 'not-allowed' : 'pointer'
+                }}
+                id="tour-anterior"
+              >
+                Anterior
+              </button>
+              <button
+                onClick={onDetener}
+                style={estilos.tourBotonSalir}
+                id="tour-salir"
+              >
+                Salir
+              </button>
+              <button
+                onClick={pasoTour === 8 ? onDetener : onSiguiente}
+                style={estilos.tourBotonSiguiente}
+                id="tour-siguiente"
+              >
+                {pasoTour === 8 ? "Finalizar" : "Siguiente"}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <p className="mascota-texto">{obtenerMensajeExplicativoTab()}</p>
+        )}
         <span className="mascota-triangulo"></span>
       </div>
 
       {/* Ilustración de Arvejito */}
       <div className="mascota-svg-caja">
         <svg width="90" height="90" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          {/* Sombras base */}
           <ellipse cx="50" cy="90" rx="25" ry="5" fill="#4E3629" opacity="0.15" />
 
-          {/* Cuerpo verde de la arveja */}
           <defs>
-            <radialGradient id="brilloArveja2" cx="35%" cy="35%" r="65%">
+            <radialGradient id="brilloArvejaTour" cx="35%" cy="35%" r="65%">
               <stop offset="0%" stopColor="#A5DB43" />
               <stop offset="70%" stopColor="var(--verde-arveja)" />
               <stop offset="100%" stopColor="#5D821C" />
             </radialGradient>
           </defs>
-          <circle cx="50" cy="55" r="32" fill="url(#brilloArveja2)" stroke="#4E3629" strokeWidth="2.2" />
+          <circle cx="50" cy="55" r="32" fill="url(#brilloArvejaTour)" stroke="#4E3629" strokeWidth="2.2" />
 
-          {/* Gorro de chef blanco */}
+          {/* Gorro de chef */}
           <g transform="translate(50, 14)">
             <path d="M-15,12 C-22,6 -20,-8 -10,-8 C-10,-12 0,-15 5,-8 C12,-15 22,-8 15,12 Z" fill="#FFFFFF" stroke="#4E3629" strokeWidth="2" />
             <rect x="-14" y="8" width="28" height="6" rx="2" fill="#FFFFFF" stroke="#4E3629" strokeWidth="2" />
@@ -78,7 +167,7 @@ export const AsistenteMascota: React.FC<AsistenteMascotaProps> = ({ pestanaActiv
           <circle cx="60" cy="50" r="4.5" fill="#4E3629" />
           <circle cx="58" cy="48" r="1.5" fill="#FFFFFF" />
 
-          {/* Mejillas sonrojadas */}
+          {/* Sonrojo */}
           <ellipse cx="34" cy="56" rx="4" ry="2.5" fill="#FF7597" opacity="0.5" />
           <ellipse cx="66" cy="56" rx="4" ry="2.5" fill="#FF7597" opacity="0.5" />
 
@@ -102,6 +191,70 @@ export const AsistenteMascota: React.FC<AsistenteMascotaProps> = ({ pestanaActiv
       </div>
     </div>
   );
+};
+
+const estilos = {
+  tourCuerpo: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '8px',
+  },
+  tourHeader: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderBottom: '1px solid rgba(133, 178, 50, 0.2)',
+    paddingBottom: '6px',
+  },
+  tourTitulo: {
+    fontSize: '0.95rem',
+    color: 'var(--chocolate-oscuro)',
+    fontWeight: '800',
+  },
+  tourPasoBadge: {
+    background: 'var(--verde-arveja)',
+    color: 'var(--blanco-puro)',
+    fontSize: '0.7rem',
+    fontWeight: '700',
+    padding: '2px 8px',
+    borderRadius: 'var(--radio-circular)',
+  },
+  tourTexto: {
+    fontSize: '0.85rem',
+    color: 'var(--chocolate-oscuro)',
+    lineHeight: '1.4',
+  },
+  tourAcciones: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    gap: '8px',
+    marginTop: '6px',
+  },
+  tourBotonSiguiente: {
+    background: 'var(--verde-arveja)',
+    color: 'var(--blanco-puro)',
+    fontSize: '0.8rem',
+    fontWeight: '700',
+    padding: '6px 12px',
+    borderRadius: '6px',
+    boxShadow: '0 2px 6px rgba(133,178,50,0.2)',
+  },
+  tourBotonSecundario: {
+    background: 'var(--blanco-puro)',
+    color: 'var(--chocolate-oscuro)',
+    border: '1px solid var(--chocolate-claro)',
+    fontSize: '0.8rem',
+    fontWeight: '700',
+    padding: '6px 12px',
+    borderRadius: '6px',
+  },
+  tourBotonSalir: {
+    background: 'transparent',
+    color: 'var(--chocolate-medio)',
+    fontSize: '0.8rem',
+    fontWeight: '600',
+    padding: '6px 8px',
+  },
 };
 
 export default AsistenteMascota;

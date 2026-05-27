@@ -5,9 +5,16 @@ import { Galleta } from '../../dominio/entidades/Galleta';
 interface TabBalanceMateriaProps {
   balanceLote: Lote;
   galletaEstandar: Galleta;
+  tourActivo?: boolean;
+  pasoTour?: number;
 }
 
-export const TabBalanceMateria: React.FC<TabBalanceMateriaProps> = ({ balanceLote, galletaEstandar }) => {
+export const TabBalanceMateria: React.FC<TabBalanceMateriaProps> = ({
+  balanceLote,
+  galletaEstandar,
+  tourActivo,
+  pasoTour,
+}) => {
   return (
     <div className="animar-aparicion" style={estilos.contenedor} id="seccion-balance-materia">
       <div style={estilos.grid}>
@@ -22,7 +29,11 @@ export const TabBalanceMateria: React.FC<TabBalanceMateriaProps> = ({ balanceLot
           
           <div style={estilos.flujoContenedor}>
             
-            <div style={estilos.flujoFila}>
+            <div
+              style={estilos.flujoFila}
+              className={tourActivo && pasoTour === 0 ? 'tour-resaltado' : ''}
+              id="cuadro-lote-bruto"
+            >
               <div style={estilos.flujoEtiqueta}>
                 <strong>Masa Bruta del Lote</strong>
                 <span>(Sólidos + Líquidos mezclados)</span>
@@ -32,7 +43,11 @@ export const TabBalanceMateria: React.FC<TabBalanceMateriaProps> = ({ balanceLot
 
             <div style={estilos.flechaFlujo}>↓</div>
 
-            <div style={estilos.flujoFilaMerma}>
+            <div
+              style={estilos.flujoFilaMerma}
+              className={tourActivo && pasoTour === 1 ? 'tour-resaltado' : ''}
+              id="cuadro-lote-merma"
+            >
               <div style={estilos.flujoEtiqueta}>
                 <strong>Merma por Horneado ({balanceLote.mermaPorcentaje}%)</strong>
                 <span>(Deshidratación y evaporación de agua)</span>
@@ -42,7 +57,7 @@ export const TabBalanceMateria: React.FC<TabBalanceMateriaProps> = ({ balanceLot
 
             <div style={estilos.flechaFlujo}>↓</div>
 
-            <div style={estilos.flujoFilaTotal}>
+            <div style={estilos.flujoFilaTotal} id="cuadro-lote-neta">
               <div style={estilos.flujoEtiqueta}>
                 <strong>Masa Neta Horneada Total</strong>
                 <span>(Masa real disponible para empaque)</span>
@@ -92,13 +107,11 @@ export const TabBalanceMateria: React.FC<TabBalanceMateriaProps> = ({ balanceLot
             <svg width="100%" height="90" viewBox="0 0 200 90" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="100" cy="45" r="35" fill="#D2B48C" stroke="#4E3629" strokeWidth="2.5" />
               <circle cx="100" cy="45" r="31" fill="none" stroke="#FFFFFF" strokeWidth="1.5" strokeDasharray="3 3" />
-              {/* Chispas */}
               <circle cx="85" cy="35" r="2.5" fill="#4E3629" />
               <circle cx="115" cy="40" r="2.5" fill="#4E3629" />
               <circle cx="95" cy="55" r="2.5" fill="#4E3629" />
               <circle cx="102" cy="30" r="2.5" fill="#4E3629" />
               <circle cx="112" cy="52" r="2.5" fill="#4E3629" />
-              {/* Cotas */}
               <line x1="55" y1="45" x2="145" y2="45" stroke="#85B232" strokeWidth="1.5" strokeDasharray="3 3" />
               <polygon points="55,45 61,42 61,48" fill="#85B232" />
               <polygon points="145,45 139,42 139,48" fill="#85B232" />
@@ -118,7 +131,11 @@ export const TabBalanceMateria: React.FC<TabBalanceMateriaProps> = ({ balanceLot
               <strong style={estilos.rendimientoNumero}>{balanceLote.unidadesPorBolsa}</strong>
               <span>Galletas por Bolsa</span>
             </div>
-            <div style={estilos.rendimientoBloqueDestacado}>
+            <div
+              style={estilos.rendimientoBloqueDestacado}
+              className={tourActivo && pasoTour === 2 ? 'tour-resaltado' : ''}
+              id="cuadro-lote-bolsas"
+            >
               <strong style={estilos.rendimientoNumeroDestacado}>{balanceLote.rendimientoBolsas}</strong>
               <span>Bolsas Exactas (Sin saldos)</span>
             </div>
@@ -180,6 +197,7 @@ const estilos = {
     padding: '16px 20px',
     borderRadius: 'var(--radio-pequeno)',
     border: '1px solid var(--chocolate-claro)',
+    transition: 'var(--transicion-suave)',
   },
   flujoFilaMerma: {
     display: 'flex',
@@ -189,6 +207,7 @@ const estilos = {
     padding: '16px 20px',
     borderRadius: 'var(--radio-pequeno)',
     border: '1px solid #FFD3D3',
+    transition: 'var(--transicion-suave)',
   },
   flujoFilaTotal: {
     display: 'flex',
@@ -203,13 +222,6 @@ const estilos = {
     display: 'flex',
     flexDirection: 'column' as const,
     textAlign: 'left' as const,
-    '& strong': {
-      fontSize: '0.95rem',
-    },
-    '& span': {
-      fontSize: '0.75rem',
-      color: 'var(--chocolate-medio)',
-    },
   },
   flujoValorPositive: {
     fontSize: '1.2rem',
@@ -302,13 +314,6 @@ const estilos = {
     display: 'flex',
     flexDirection: 'column' as const,
     alignItems: 'center',
-    '& span': {
-      fontSize: '0.7rem',
-      color: 'var(--chocolate-medio)',
-      fontWeight: '600',
-      textAlign: 'center' as const,
-      marginTop: '4px',
-    },
   },
   rendimientoBloqueDestacado: {
     background: 'var(--rosa-claro)',
@@ -319,13 +324,7 @@ const estilos = {
     flexDirection: 'column' as const,
     alignItems: 'center',
     boxShadow: 'var(--sombra-sutil)',
-    '& span': {
-      fontSize: '0.7rem',
-      color: 'var(--rosa-brillante)',
-      fontWeight: '700',
-      textAlign: 'center' as const,
-      marginTop: '4px',
-    },
+    transition: 'var(--transicion-suave)',
   },
   rendimientoNumero: {
     fontSize: '1.4rem',

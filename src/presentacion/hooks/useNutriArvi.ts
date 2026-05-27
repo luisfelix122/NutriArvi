@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { RepositorioDatosPlanta } from "../../infraestructura/repositorios/RepositorioDatosPlanta";
 import { RepositorioResenasLocalStorage } from "../../infraestructura/repositorios/RepositorioResenasLocalStorage";
 import { AdaptadorWhatsApp } from "../../infraestructura/servicios/AdaptadorWhatsApp";
@@ -86,6 +86,64 @@ export function useNutriArvi() {
     return adaptadorWhatsApp.obtenerEnlacePedido(bolsas);
   };
 
+  // --- Tour del Inversionista ---
+  const [tourActivo, setTourActivo] = useState<boolean>(false);
+  const [pasoTour, setPasoTour] = useState<number>(0);
+
+  const iniciarTour = () => {
+    setPasoTour(0);
+    setTourActivo(true);
+    setPestanaActiva("balance");
+  };
+
+  const detenerTour = () => {
+    setTourActivo(false);
+  };
+
+  const siguientePasoTour = () => {
+    setPasoTour((prev) => {
+      const siguiente = Math.min(prev + 1, 8);
+      ajustarPestanaPorPaso(siguiente);
+      return siguiente;
+    });
+  };
+
+  const anteriorPasoTour = () => {
+    setPasoTour((prev) => {
+      const anterior = Math.max(prev - 1, 0);
+      ajustarPestanaPorPaso(anterior);
+      return anterior;
+    });
+  };
+
+  const ajustarPestanaPorPaso = (paso: number) => {
+    if (paso >= 0 && paso <= 2) {
+      setPestanaActiva("balance");
+    } else if (paso >= 3 && paso <= 4) {
+      setPestanaActiva("formulacion");
+    } else if (paso >= 5 && paso <= 6) {
+      setPestanaActiva("costos");
+    } else if (paso >= 7 && paso <= 8) {
+      setPestanaActiva("proyecciones");
+    }
+  };
+
+  // Sincronizar pestaña si el usuario hace clic manual durante el tour para no romper la guía
+  useEffect(() => {
+    if (tourActivo) {
+      // Si cambia de pestaña manualmente, resetear al primer paso de esa pestaña
+      if (pestanaActiva === "balance" && (pasoTour < 0 || pasoTour > 2)) {
+        setPasoTour(0);
+      } else if (pestanaActiva === "formulacion" && (pasoTour < 3 || pasoTour > 4)) {
+        setPasoTour(3);
+      } else if (pestanaActiva === "costos" && (pasoTour < 5 || pasoTour > 6)) {
+        setPasoTour(5);
+      } else if (pestanaActiva === "proyecciones" && (pasoTour < 7 || pasoTour > 8)) {
+        setPasoTour(7);
+      }
+    }
+  }, [pestanaActiva, tourActivo]);
+
   return {
     // Pestañas
     pestanaActiva,
@@ -120,6 +178,14 @@ export function useNutriArvi() {
     
     // Enlaces de pedido
     enlaceWhatsAppInformativo,
-    obtenerEnlaceWhatsAppPedidoEspecifico
+    obtenerEnlaceWhatsAppPedidoEspecifico,
+
+    // Tour del Inversionista
+    tourActivo,
+    pasoTour,
+    iniciarTour,
+    detenerTour,
+    siguientePasoTour,
+    anteriorPasoTour
   };
 }

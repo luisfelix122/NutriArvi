@@ -2,19 +2,23 @@ import React from 'react';
 
 interface TabCostosProps {
   desgloseCostosUnitarios: { nombre: string; valor: number; porcentaje: number }[];
+  tourActivo?: boolean;
+  pasoTour?: number;
 }
 
-export const TabCostos: React.FC<TabCostosProps> = ({ desgloseCostosUnitarios }) => {
+export const TabCostos: React.FC<TabCostosProps> = ({
+  desgloseCostosUnitarios,
+  tourActivo,
+  pasoTour,
+}) => {
   const precioSugerido = 2.00;
   const costoTotalProduccion = 1.57;
-  const margenGananciaUnitario = 0.43;
 
-  // Colores para cada sección
   const colores = [
-    'var(--verde-arveja)',     /* Insumos */
-    '#FFA800',                  /* Empaque y Sticker */
-    'var(--rosa-primario)',     /* CIF */
-    '#00C2FF'                   /* Ganancia */
+    'var(--verde-arveja)',
+    '#FFA800',
+    'var(--rosa-primario)',
+    '#00C2FF'
   ];
 
   return (
@@ -57,18 +61,26 @@ export const TabCostos: React.FC<TabCostosProps> = ({ desgloseCostosUnitarios })
           </div>
 
           <div style={estilos.bloqueTotales}>
-            <div style={estilos.totalFila}>
+            <div
+              style={estilos.totalFila}
+              className={tourActivo && pasoTour === 5 ? 'tour-resaltado' : ''}
+              id="cuadro-costo-produccion"
+            >
               <span>COSTO TOTAL PRODUCCIÓN:</span>
               <strong style={estilos.totalValor}>S/ {costoTotalProduccion.toFixed(2)} (78.7%)</strong>
             </div>
-            <div style={estilos.totalFilaDestacada}>
+            <div
+              style={estilos.totalFilaDestacada}
+              className={tourActivo && pasoTour === 6 ? 'tour-resaltado' : ''}
+              id="cuadro-pvp-destacado"
+            >
               <span>PRECIO DE VENTA AL PÚBLICO (PVP):</span>
               <strong style={estilos.totalValorDestacado}>S/ {precioSugerido.toFixed(2)} (100.0%)</strong>
             </div>
           </div>
         </div>
 
-        {/* Visualización Gráfica (Dona SVG Interactiva de Alta Fidelidad) */}
+        {/* Visualización Gráfica (Dona SVG) */}
         <div className="tarjeta-premium" style={estilos.tarjetaGrafico}>
           <div style={estilos.cabeceraTarjeta}>
             <span style={estilos.icono}>🎨</span>
@@ -77,23 +89,18 @@ export const TabCostos: React.FC<TabCostosProps> = ({ desgloseCostosUnitarios })
           <p style={estilos.subtitulo}>Representación del valor de venta unitario de S/ 2.00.</p>
           
           <div style={estilos.graficoContenedor}>
-            {/* Dona SVG */}
             <svg width="220" height="220" viewBox="0 0 42 42" className="dona-svg" style={estilos.svgDona}>
               <circle cx="21" cy="21" r="15.915" fill="transparent" stroke="var(--chocolate-claro)" strokeWidth="4"></circle>
               
-              {/* Insumos: 40.4% -> stroke-dasharray="40.4 59.6" stroke-dashoffset="100" (start at top: 25) */}
               <circle cx="21" cy="21" r="15.915" fill="transparent" stroke={colores[0]} strokeWidth="4.2"
                 strokeDasharray="40.4 59.6" strokeDashoffset="25"></circle>
 
-              {/* Empaque: 15% -> stroke-dasharray="15 85" stroke-dashoffset="100 - 40.4 = 59.6" -> starting from 25 - 40.4 = -15.4 */}
               <circle cx="21" cy="21" r="15.915" fill="transparent" stroke={colores[1]} strokeWidth="4.2"
                 strokeDasharray="15 85" strokeDashoffset="-15.4"></circle>
 
-              {/* CIF: 23.3% -> starting from -15.4 - 15 = -30.4 */}
               <circle cx="21" cy="21" r="15.915" fill="transparent" stroke={colores[2]} strokeWidth="4.2"
                 strokeDasharray="23.3 76.7" strokeDashoffset="-30.4"></circle>
 
-              {/* Ganancia: 21.3% -> starting from -30.4 - 23.3 = -53.7 */}
               <circle cx="21" cy="21" r="15.915" fill="transparent" stroke={colores[3]} strokeWidth="4.2"
                 strokeDasharray="21.3 78.7" strokeDashoffset="-53.7"></circle>
 
@@ -125,7 +132,7 @@ export const TabCostos: React.FC<TabCostosProps> = ({ desgloseCostosUnitarios })
           
           <div style={estilos.resumenFinancieroCaja}>
             <p>
-              💰 <strong>Margen de Rentabilidad Saludable:</strong> Un margen neto del <strong>{margenGananciaUnitario * 100 / precioSugerido}%</strong> es excelente para productos artesanales nutritivos, permitiendo reinversión constante y amortización veloz de equipos.
+              💰 <strong>Margen de Rentabilidad Saludable:</strong> Un margen neto del <strong>21.5%</strong> es excelente para productos artesanales nutritivos, permitiendo reinversión constante y amortización veloz de equipos.
             </p>
           </div>
         </div>
@@ -237,6 +244,9 @@ const estilos = {
     fontSize: '0.85rem',
     fontWeight: '700',
     color: 'var(--chocolate-medio)',
+    padding: '8px 12px',
+    borderRadius: '8px',
+    transition: 'var(--transicion-suave)',
   },
   totalValor: {
     color: 'var(--chocolate-oscuro)',
@@ -252,6 +262,7 @@ const estilos = {
     fontSize: '0.9rem',
     fontWeight: '800',
     color: 'var(--rosa-brillante)',
+    transition: 'var(--transicion-suave)',
   },
   totalValorDestacado: {
     fontSize: '1.2rem',
@@ -301,10 +312,6 @@ const estilos = {
     borderRadius: 'var(--radio-medio)',
     border: '1px solid rgba(133, 178, 50, 0.15)',
     textAlign: 'left' as const,
-    '& p': {
-      fontSize: '0.85rem',
-      color: 'var(--chocolate-oscuro)',
-    },
   },
 };
 

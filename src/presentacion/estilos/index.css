@@ -201,6 +201,25 @@ input[type="range"]::-webkit-slider-thumb:hover {
   flex-shrink: 0;
 }
 
+/* Resaltado del Tour de Inversión */
+.tour-resaltado {
+  border: 3px solid var(--verde-arveja) !important;
+  box-shadow: 0 0 25px rgba(133, 178, 50, 0.7) !important;
+  transform: scale(1.025) translateY(-4px) !important;
+  animation: pulso-resaltado 1.5s infinite alternate !important;
+  z-index: 10;
+  position: relative;
+}
+
+@keyframes pulso-resaltado {
+  from {
+    box-shadow: 0 0 10px rgba(133, 178, 50, 0.4);
+  }
+  to {
+    box-shadow: 0 0 30px rgba(133, 178, 50, 0.9);
+  }
+}
+
 /* ====================================================================
    MEDIA QUERIES PARA CELULARES Y TABLETS
    ==================================================================== */
