@@ -14,7 +14,7 @@ export const SeccionDocumentos: React.FC = () => {
       contenido: (
         <>
           <p style={estilos.parrafo}>
-            Bienvenido a <strong>NutriArvi</strong>. Al acceder a nuestro sitio web interactivo y utilizar nuestros servicios, aceptás cumplir y estar sujeto a los siguientes términos y condiciones.
+            Bienvenido a <strong>NutriArvi</strong>. Al acceder a nuestro sitio web interactivo y utilizar nuestros servicios, aceptas cumplir y estar sujeto a los siguientes términos y condiciones.
           </p>
           <ol style={estilos.lista}>
             <li>
@@ -76,7 +76,7 @@ export const SeccionDocumentos: React.FC = () => {
       <div style={estilos.contenedor}>
         <div style={estilos.cabecera}>
           <h3 style={estilos.titulo}>Información Legal y Transparencia</h3>
-          <p style={estilos.subtitulo}>Conocé nuestras políticas de transparencia, términos de simulación y condiciones de compra de manera sencilla y clara.</p>
+          <p style={estilos.subtitulo}>Conoce nuestras políticas de transparencia, términos de simulación y condiciones de compra de manera sencilla y clara.</p>
         </div>
 
         <div style={estilos.acordeonGrupo}>

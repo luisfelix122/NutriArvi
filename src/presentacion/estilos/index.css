@@ -74,16 +74,16 @@ button {
   transition: var(--transicion-suave);
 }
 .tarjeta-premium:hover {
-  box-shadow: var(--sombra-media);
-  transform: translateY(-2px);
-  border-color: rgba(255, 117, 151, 0.25);
+  box-shadow: var(--sombra-premium);
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(255, 117, 151, 0.35);
 }
 
-/* Animaciones */
+/* Animaciones y Transiciones de Movimiento (Factor WOW) */
 @keyframes aparecer {
   from {
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(16px);
   }
   to {
     opacity: 1;
@@ -91,6 +91,265 @@ button {
   }
 }
 
+@keyframes flotar {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes brillar {
+  0%, 100% {
+    box-shadow: 0 4px 20px rgba(255, 117, 151, 0.15);
+  }
+  50% {
+    box-shadow: 0 4px 30px rgba(133, 178, 50, 0.45);
+  }
+}
+
 .animar-aparicion {
-  animation: aparecer 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: aparecer 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animar-mascota {
+  animation: flotar 4s ease-in-out infinite;
+}
+
+.brillar-activo {
+  animation: brillar 3s infinite;
+}
+
+/* Efectos en Inputs y Controles */
+input[type="range"]::-webkit-slider-thumb {
+  background: var(--rosa-primario);
+  border: 2px solid var(--blanco-puro);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: var(--transicion-rapida);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+  background: var(--rosa-brillante);
+  transform: scale(1.2);
+}
+
+/* Botones con Micro-animación */
+.boton-interactivo {
+  position: relative;
+  overflow: hidden;
+  transition: var(--transicion-suave);
+}
+.boton-interactivo:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(133, 178, 50, 0.35);
+}
+.boton-interactivo:active {
+  transform: translateY(0);
+}
+
+/* Estilos para el Asistente Mascota Arvejito */
+.mascota-contenedor {
+  max-width: 1200px;
+  margin: 15px auto 25px auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.mascota-bocadillo {
+  background: var(--verde-arveja-claro);
+  border: 2px solid rgba(133, 178, 50, 0.4);
+  padding: 16px 22px;
+  border-radius: 16px;
+  box-shadow: var(--sombra-sutil);
+  position: relative;
+  max-width: 650px;
+  text-align: left;
+}
+
+.mascota-texto {
+  font-size: 0.9rem;
+  color: var(--chocolate-oscuro);
+  line-height: 1.5;
+}
+
+.mascota-triangulo {
+  content: "";
+  position: absolute;
+  right: -11px;
+  top: 35px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-left: 12px solid rgba(133, 178, 50, 0.4);
+}
+
+.mascota-svg-caja {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ====================================================================
+   MEDIA QUERIES PARA CELULARES Y TABLETS
+   ==================================================================== */
+@media (max-width: 768px) {
+  /* Cabecera */
+  #encabezado-principal {
+    padding: 30px 16px 20px 16px !important;
+  }
+  #encabezado-principal > div {
+    gap: 15px !important;
+  }
+  #encabezado-principal h1 {
+    font-size: 2rem !important;
+    text-align: center;
+  }
+  #encabezado-principal p {
+    font-size: 0.95rem !important;
+    text-align: center;
+  }
+  #encabezado-principal > div > div {
+    text-align: center !important;
+    align-items: center !important;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Pestañas */
+  #contenedor-pestanas {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+    padding: 0 12px !important;
+    margin: 15px auto !important;
+  }
+  #contenedor-pestanas button {
+    padding: 10px 8px !important;
+    border-radius: 12px !important;
+  }
+  #contenedor-pestanas span:first-child {
+    font-size: 0.85rem !important;
+  }
+  #contenedor-pestanas button span:last-child {
+    display: none !important; /* Esconde descripción en celular */
+  }
+
+  /* Asistente Mascota en Móvil */
+  .mascota-contenedor {
+    flex-direction: column !important;
+    gap: 15px !important;
+    margin: 10px auto !important;
+  }
+  .mascota-bocadillo {
+    max-width: 100% !important;
+    padding: 12px 16px !important;
+  }
+  .mascota-triangulo {
+    right: 50% !important;
+    bottom: -11px !important;
+    top: auto !important;
+    transform: translateX(50%) !important;
+    border-left: 10px solid transparent !important;
+    border-right: 10px solid transparent !important;
+    border-top: 12px solid rgba(133, 178, 50, 0.4) !important;
+    border-left-width: 10px !important;
+    border-right-width: 10px !important;
+    border-top-width: 12px !important;
+  }
+  .mascota-svg-caja svg {
+    width: 70px !important;
+    height: 70px !important;
+  }
+
+  /* Grids de contenido */
+  #seccion-balance-materia > div,
+  #seccion-analisis-costos > div,
+  #seccion-proyecciones > div,
+  #seccion-resenas-clientes > div {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Redimensionamiento de tarjetas y paddings */
+  .tarjeta-premium {
+    padding: 16px !important;
+  }
+  
+  /* Ajustes en Balance de Materia */
+  .morfologiaGrid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+  .rendimientoComercial {
+    grid-template-columns: 1fr !important;
+    gap: 8px !important;
+  }
+
+  /* Ajustes en Formulación */
+  #seccion-formulacion table {
+    font-size: 0.8rem !important;
+  }
+  #seccion-formulacion th,
+  #seccion-formulacion td {
+    padding: 10px 6px !important;
+  }
+  .barraFondo {
+    width: 60px !important;
+  }
+  .contenedorInfo {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Ajustes en Costos */
+  .leyendaGrid {
+    grid-template-columns: 1fr !important;
+    gap: 6px !important;
+  }
+
+  /* Ajustes en Proyecciones */
+  .resultadosGrid {
+    grid-template-columns: 1fr !important;
+  }
+  .rangoEtiquetas {
+    font-size: 0.65rem !important;
+  }
+
+  /* Ajustes en Reseñas */
+  #seccion-resenas-clientes > div {
+    grid-template-columns: 1fr !important;
+  }
+  .listaContenedor {
+    max-height: 380px !important;
+  }
+
+  /* Botón flotante */
+  #boton-whatsapp-flotante-caja {
+    bottom: 15px !important;
+    right: 15px !important;
+  }
+  #whatsapp-flotante-tooltip {
+    display: none !important; /* Esconde tooltip en móvil */
+  }
+
+  /* Pie de página */
+  #pie-pagina-principal > div > div:first-child {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+  #pie-pagina-principal > div > div:last-child {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 8px !important;
+  }
 }

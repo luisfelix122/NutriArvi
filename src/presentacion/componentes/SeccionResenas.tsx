@@ -35,7 +35,7 @@ export const SeccionResenas: React.FC<SeccionResenasProps> = ({
         <div style={estilos.cabecera}>
           <span style={estilos.tag}>Opiniones Reales</span>
           <h2 style={estilos.titulo}>Comentarios de Clientes</h2>
-          <p style={estilos.subtitulo}>Nuestra mayor recompensa es saber que alimentamos de forma saludable e irresistible. ¡Dejanos tu opinión!</p>
+          <p style={estilos.subtitulo}>Nuestra mayor recompensa es saber que alimentamos de forma saludable e irresistible. ¡Déjanos tu opinión!</p>
         </div>
 
         <div style={estilos.grid}>
@@ -43,7 +43,7 @@ export const SeccionResenas: React.FC<SeccionResenasProps> = ({
           {/* Formulario de Nueva Reseña */}
           <div className="tarjeta-premium" style={estilos.tarjetaFormulario}>
             <h3 style={estilos.tituloTarjeta}>Escribir mi opinión</h3>
-            <p style={estilos.subtituloTarjeta}>Calificá tu experiencia con NutriArvi.</p>
+            <p style={estilos.subtituloTarjeta}>Califica tu experiencia con NutriArvi. Se publicará instantáneamente en el navegador.</p>
 
             <form onSubmit={enviarNuevaResena} style={estilos.formulario} id="formulario-nueva-resena">
               
@@ -87,7 +87,7 @@ export const SeccionResenas: React.FC<SeccionResenasProps> = ({
                   rows={4}
                   value={resenaComentario}
                   onChange={(e) => setResenaComentario(e.target.value)}
-                  placeholder="Contanos qué te pareció el sabor, crocantez y poder nutritivo..."
+                  placeholder="Cuéntanos qué te pareció el sabor, crocantez y poder nutritivo..."
                   style={estilos.textarea}
                   required
                 ></textarea>
@@ -101,12 +101,12 @@ export const SeccionResenas: React.FC<SeccionResenasProps> = ({
 
               {resenaExito && (
                 <div style={estilos.alertaExito} id="resena-exito-msj">
-                  🎉 ¡Muchas gracias! Tu opinión fue guardada con éxito y publicada.
+                  🎉 ¡Muchas gracias! Tu opinión ha sido publicada directamente y guardada de forma segura en tu navegador.
                 </div>
               )}
 
-              <button type="submit" style={estilos.botonEnviar} id="boton-enviar-opinion">
-                Publicar opinión
+              <button type="submit" className="boton-interactivo" style={estilos.botonEnviar} id="boton-enviar-opinion">
+                Publicar opinión directamente
               </button>
 
             </form>
@@ -125,7 +125,7 @@ export const SeccionResenas: React.FC<SeccionResenasProps> = ({
 
             <div style={estilos.listaContenedor}>
               {listaResenas.map((resena) => (
-                <div key={resena.id} className="tarjeta-premium" style={estilos.tarjetaResena} id={`opinion-card-${resena.id}`}>
+                <div key={resena.id} className="tarjeta-premium animar-aparicion" style={estilos.tarjetaResena} id={`opinion-card-${resena.id}`}>
                   <div style={estilos.resenaCabecera}>
                     <strong style={estilos.resenaAutor}>{resena.autor}</strong>
                     <span style={estilos.resenaFecha}>{resena.fecha}</span>

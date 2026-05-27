@@ -19,7 +19,7 @@ export const PiePagina: React.FC = () => {
             <h5 style={estilos.tituloSeccion}>Contacto Directo</h5>
             <ul style={estilos.lista}>
               <li>📱 Pedidos / WhatsApp: <strong>939997622</strong></li>
-              <li>🇵🇪 Distribución en Lima, Perú</li>
+              <li>🇵🇪 Distribución en Piura, Perú</li>
               <li>⏰ Atención: Lunes a Sábados 8:00 AM - 6:00 PM</li>
             </ul>
           </div>

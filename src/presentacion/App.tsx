@@ -2,6 +2,7 @@ import React from 'react';
 import { useNutriArvi } from './hooks/useNutriArvi';
 import Encabezado from './componentes/Encabezado';
 import PanelTabs from './componentes/PanelTabs';
+import AsistenteMascota from './componentes/AsistenteMascota';
 import TabBalanceMateria from './componentes/TabBalanceMateria';
 import TabFormulacion from './componentes/TabFormulacion';
 import TabCostos from './componentes/TabCostos';
@@ -53,6 +54,9 @@ export const App: React.FC = () => {
         pestanaActiva={pestanaActiva}
         onChangePestana={setPestanaActiva}
       />
+
+      {/* Asistente Virtual: Arvejito explicativo */}
+      <AsistenteMascota pestanaActiva={pestanaActiva} />
 
       {/* Renderizado Dinámico de la Pestaña Activa */}
       <main style={estilos.main}>

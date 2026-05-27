@@ -99,7 +99,7 @@ export const TabProyecciones: React.FC<TabProyeccionesProps> = ({
               <span style={estilos.icono}>🧮</span>
               <h3 style={estilos.tituloTarjeta}>Simulador Dinámico de Venta</h3>
             </div>
-            <p style={estilos.subtitulo}>Mové el deslizador para proyectar tus ingresos y ganancias netas operativas en base al volumen mensual deseado.</p>
+            <p style={estilos.subtitulo}>Mueve el deslizador para proyectar tus ingresos y ganancias netas operativas en base al volumen mensual deseado.</p>
 
             <div style={estilos.controlCalculadora}>
               <div style={estilos.valorSimuladoContenedor}>
@@ -120,7 +120,7 @@ export const TabProyecciones: React.FC<TabProyeccionesProps> = ({
               />
               <div style={estilos.rangoEtiquetas}>
                 <span>0 bolsas</span>
-                <span>Punto Equilibrio (236)</span>
+                <span>Punto de Equilibrio (236)</span>
                 <span>1000 bolsas</span>
               </div>
             </div>
@@ -130,7 +130,7 @@ export const TabProyecciones: React.FC<TabProyeccionesProps> = ({
               ...estilos.resultadosPanel,
               ...(esUtilidadPositiva ? estilos.resultadosPanelRentable : {}),
               ...(!esUtilidadPositiva && !esEquilibrioExacto ? estilos.resultadosPanelPerdida : {})
-            }}>
+            }} className={esUtilidadPositiva ? 'brillar-activo' : ''}>
               
               <div style={estilos.resultadoEstadoBadge}>
                 {esUtilidadPositiva ? (
@@ -189,12 +189,13 @@ export const TabProyecciones: React.FC<TabProyeccionesProps> = ({
             {volumenSimulado > 0 && (
               <div style={estilos.pedidoCajaAccion}>
                 <p style={estilos.pedidoCajaTexto}>
-                  ¿Querés abastecer esta proyección con masa real de NutriArvi? Pedí ahora tus lotes equivalentes directos por WhatsApp:
+                  ¿Quieres abastecer esta proyección con masa real de NutriArvi? Pide ahora tus lotes equivalentes directos por WhatsApp:
                 </p>
                 <a
                   href={obtenerEnlaceWhatsAppPedidoEspecifico(volumenSimulado)}
                   target="_blank"
                   rel="noopener noreferrer"
+                  className="boton-interactivo"
                   style={estilos.pedidoBoton}
                   id="boton-pedido-simulador"
                 >
@@ -265,6 +266,10 @@ const estilos = {
     borderRadius: 'var(--radio-medio)',
     padding: '20px',
     textAlign: 'left' as const,
+    transition: 'var(--transicion-rapida)',
+    '&:hover': {
+      transform: 'translateY(-2px)',
+    }
   },
   escenarioItemEquilibrio: {
     borderColor: 'var(--chocolate-medio)',
