@@ -1,0 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+@import './variables.css';
+
+/* Reseteo General */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--fuente-principal);
+  background-color: var(--crema-fondo);
+  color: var(--chocolate-oscuro);
+  min-height: 100vh;
+  line-height: 1.6;
+  overflow-x: hidden;
+  position: relative;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(255, 117, 151, 0.05) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(133, 178, 50, 0.05) 0px, transparent 50%);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--chocolate-muy-claro);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--rosa-primario);
+  border-radius: var(--radio-pequeno);
+  border: 2px solid var(--chocolate-muy-claro);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--rosa-brillante);
+}
+
+/* Tipografía de Encabezados */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--chocolate-oscuro);
+}
+
+/* Enlaces y Botones */
+a {
+  color: var(--rosa-primario);
+  text-decoration: none;
+  transition: var(--transicion-rapida);
+}
+a:hover {
+  color: var(--rosa-brillante);
+}
+
+button {
+  font-family: var(--fuente-principal);
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
+  transition: var(--transicion-rapida);
+}
+
+/* Estilo Glassmorphic Tarjetas */
+.tarjeta-premium {
+  background: var(--vidrio-fondo);
+  border: 1px solid var(--vidrio-borde);
+  border-radius: var(--radio-medio);
+  padding: 24px;
+  box-shadow: var(--sombra-sutil);
+  backdrop-filter: var(--vidrio-filtro);
+  transition: var(--transicion-suave);
+}
+.tarjeta-premium:hover {
+  box-shadow: var(--sombra-media);
+  transform: translateY(-2px);
+  border-color: rgba(255, 117, 151, 0.25);
+}
+
+/* Animaciones */
+@keyframes aparecer {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animar-aparicion {
+  animation: aparecer 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
