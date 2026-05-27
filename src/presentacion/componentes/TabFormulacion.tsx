@@ -1,5 +1,6 @@
 import React from 'react';
 import { Ingrediente } from '../../dominio/entidades/Ingrediente';
+import AsistenteMascota from './AsistenteMascota';
 
 interface TabFormulacionProps {
   listaIngredientes: Ingrediente[];
@@ -7,14 +8,20 @@ interface TabFormulacionProps {
   pesoTotalIngredientes: number;
   tourActivo?: boolean;
   pasoTour?: number;
+  onSiguiente?: () => void;
+  onAnterior?: () => void;
+  onDetener?: () => void;
 }
 
 export const TabFormulacion: React.FC<TabFormulacionProps> = ({
   listaIngredientes,
   costoTotalIngredientes,
   pesoTotalIngredientes,
-  tourActivo,
-  pasoTour,
+  tourActivo = false,
+  pasoTour = 0,
+  onSiguiente = () => {},
+  onAnterior = () => {},
+  onDetener = () => {},
 }) => {
   return (
     <div className="animar-aparicion" style={estilos.contenedor} id="seccion-formulacion">
@@ -31,14 +38,31 @@ export const TabFormulacion: React.FC<TabFormulacionProps> = ({
               <span style={estilos.resumenLabel}>PESO TOTAL MEZCLA</span>
               <strong style={estilos.resumenValorGreen}>{pesoTotalIngredientes} gramos</strong>
             </div>
-            <div
-              style={estilos.bloqueResumen}
-              className={tourActivo && pasoTour === 4 ? 'tour-resaltado' : ''}
-              id="cuadro-costo-ingredientes"
-            >
-              <span style={estilos.resumenLabel}>COSTO INGREDIENTES</span>
-              <strong style={estilos.resumenValorPink}>S/ {costoTotalIngredientes.toFixed(2)}</strong>
+            
+            <div style={estilos.bloqueCostoConMascota}>
+              <div
+                style={estilos.bloqueResumen}
+                className={tourActivo && pasoTour === 4 ? 'tour-resaltado' : ''}
+                id="cuadro-costo-ingredientes"
+              >
+                <span style={estilos.resumenLabel}>COSTO INGREDIENTES</span>
+                <strong style={estilos.resumenValorPink}>S/ {costoTotalIngredientes.toFixed(2)}</strong>
+              </div>
+              {tourActivo && pasoTour === 4 && (
+                <div style={estilos.mascotaCompactaResumen}>
+                  <AsistenteMascota
+                    pestanaActiva="formulacion"
+                    tourActivo={true}
+                    pasoTour={4}
+                    onSiguiente={onSiguiente}
+                    onAnterior={onAnterior}
+                    onDetener={onDetener}
+                    compacto={true}
+                  />
+                </div>
+              )}
             </div>
+
           </div>
         </div>
 
@@ -60,49 +84,69 @@ export const TabFormulacion: React.FC<TabFormulacionProps> = ({
                 const esPasoHarinaArveja = tourActivo && pasoTour === 3 && esBaseNutricional;
                 
                 return (
-                  <tr
-                    key={index}
-                    style={{
-                      ...estilos.fila,
-                      ...(esBaseNutricional ? estilos.filaDestacada : {}),
-                    }}
-                    className={esPasoHarinaArveja ? 'tour-resaltado' : ''}
-                    id={esBaseNutricional ? 'fila-harina-arveja' : `fila-insumo-${index}`}
-                  >
-                    <td style={estilos.tdIngrediente}>
-                      <div style={estilos.bloqueNombre}>
-                        <span style={estilos.puntito}>●</span>
-                        <strong style={estilos.nombreTexto}>{ingrediente.nombre}</strong>
-                      </div>
-                    </td>
-                    
-                    <td style={estilos.tdCentro}>{ingrediente.cantidadGramos} g</td>
-                    
-                    <td style={estilos.tdDerecha}>
-                      <div style={estilos.bloqueProgreso}>
-                        <span style={estilos.porcentajeTexto}>{porcentajePeso.toFixed(1)}%</span>
-                        <div style={estilos.barraFondo}>
-                          <div
-                            style={{
-                              ...estilos.barraProgreso,
-                              width: `${porcentajePeso}%`,
-                              backgroundColor: esBaseNutricional ? 'var(--verde-arveja)' : 'var(--rosa-primario)',
-                            }}
-                          ></div>
+                  <React.Fragment key={index}>
+                    <tr
+                      style={{
+                        ...estilos.fila,
+                        ...(esBaseNutricional ? estilos.filaDestacada : {}),
+                      }}
+                      className={esPasoHarinaArveja ? 'tour-resaltado' : ''}
+                      id={esBaseNutricional ? 'fila-harina-arveja' : `fila-insumo-${index}`}
+                    >
+                      <td style={estilos.tdIngrediente}>
+                        <div style={estilos.bloqueNombre}>
+                          <span style={estilos.puntito}>●</span>
+                          <strong style={estilos.nombreTexto}>{ingrediente.nombre}</strong>
                         </div>
-                      </div>
-                    </td>
+                      </td>
+                      
+                      <td style={estilos.tdCentro}>{ingrediente.cantidadGramos} g</td>
+                      
+                      <td style={estilos.tdDerecha}>
+                        <div style={estilos.bloqueProgreso}>
+                          <span style={estilos.porcentajeTexto}>{porcentajePeso.toFixed(1)}%</span>
+                          <div style={estilos.barraFondo}>
+                            <div
+                              style={{
+                                ...estilos.barraProgreso,
+                                width: `${porcentajePeso}%`,
+                                backgroundColor: esBaseNutricional ? 'var(--verde-arveja)' : 'var(--rosa-primario)',
+                              }}
+                            ></div>
+                          </div>
+                        </div>
+                      </td>
+                      
+                      <td style={estilos.tdCentro}>{ingrediente.precioCompraBase}</td>
+                      
+                      <td style={{
+                        ...estilos.tdDerecha,
+                        fontWeight: '800',
+                        color: esBaseNutricional ? 'var(--verde-arveja)' : 'var(--chocolate-oscuro)',
+                      }}>
+                        S/ {ingrediente.costoProrrateado.toFixed(2)}
+                      </td>
+                    </tr>
                     
-                    <td style={estilos.tdCentro}>{ingrediente.precioCompraBase}</td>
-                    
-                    <td style={{
-                      ...estilos.tdDerecha,
-                      fontWeight: '800',
-                      color: esBaseNutricional ? 'var(--verde-arveja)' : 'var(--chocolate-oscuro)',
-                    }}>
-                      S/ {ingrediente.costoProrrateado.toFixed(2)}
-                    </td>
-                  </tr>
+                    {/* Renderizado de Arvejito compacto directamente en la fila de Harina de Arveja */}
+                    {esPasoHarinaArveja && (
+                      <tr style={estilos.filaMascotaTour}>
+                        <td colSpan={5} style={estilos.tdMascotaTour}>
+                          <div style={estilos.mascotaCompactaFilaTabla}>
+                            <AsistenteMascota
+                              pestanaActiva="formulacion"
+                              tourActivo={true}
+                              pasoTour={3}
+                              onSiguiente={onSiguiente}
+                              onAnterior={onAnterior}
+                              onDetener={onDetener}
+                              compacto={true}
+                            />
+                          </div>
+                        </td>
+                      </tr>
+                    )}
+                  </React.Fragment>
                 );
               })}
             </tbody>
@@ -176,6 +220,18 @@ const estilos = {
   resumenFormulacion: {
     display: 'flex',
     gap: '16px',
+    flexWrap: 'wrap' as const,
+  },
+  bloqueCostoConMascota: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '10px',
+    maxWidth: '300px',
+  },
+  mascotaCompactaResumen: {
+    borderLeft: '3px solid var(--verde-arveja)',
+    paddingLeft: '10px',
+    marginTop: '2px',
   },
   bloqueResumen: {
     background: 'var(--chocolate-muy-claro)',
@@ -243,6 +299,17 @@ const estilos = {
   filaDestacada: {
     background: 'var(--verde-arveja-claro)',
     borderColor: 'rgba(133, 178, 50, 0.25)',
+  },
+  filaMascotaTour: {
+    background: 'var(--verde-arveja-claro)',
+  },
+  tdMascotaTour: {
+    padding: '8px 16px 16px 16px',
+    borderBottom: '1px solid rgba(133, 178, 50, 0.2)',
+  },
+  mascotaCompactaFilaTabla: {
+    borderLeft: '3px solid var(--verde-arveja)',
+    paddingLeft: '15px',
   },
   tdIngrediente: {
     padding: '16px',

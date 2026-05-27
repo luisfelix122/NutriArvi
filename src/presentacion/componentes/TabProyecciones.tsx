@@ -1,5 +1,6 @@
 import React from 'react';
 import { Proyeccion } from '../../dominio/entidades/Proyeccion';
+import AsistenteMascota from './AsistenteMascota';
 
 interface TabProyeccionesProps {
   escenariosFinancierosFijos: Proyeccion[];
@@ -9,6 +10,9 @@ interface TabProyeccionesProps {
   obtenerEnlaceWhatsAppPedidoEspecifico: (bolsas: number) => string;
   tourActivo?: boolean;
   pasoTour?: number;
+  onSiguiente?: () => void;
+  onAnterior?: () => void;
+  onDetener?: () => void;
 }
 
 export const TabProyecciones: React.FC<TabProyeccionesProps> = ({
@@ -17,8 +21,11 @@ export const TabProyecciones: React.FC<TabProyeccionesProps> = ({
   setVolumenSimulado,
   proyeccionSimulada,
   obtenerEnlaceWhatsAppPedidoEspecifico,
-  tourActivo,
-  pasoTour,
+  tourActivo = false,
+  pasoTour = 0,
+  onSiguiente = () => {},
+  onAnterior = () => {},
+  onDetener = () => {},
 }) => {
   const esUtilidadPositiva = proyeccionSimulada.utilidadNeta > 0;
   const esEquilibrioExacto = proyeccionSimulada.utilidadNeta === 0;
@@ -43,55 +50,70 @@ export const TabProyecciones: React.FC<TabProyeccionesProps> = ({
                 const esPasoEquilibrio = tourActivo && pasoTour === 7 && esEquilibrio;
                 
                 return (
-                  <div
-                    key={index}
-                    style={{
-                      ...estilos.escenarioItem,
-                      ...(esEquilibrio ? estilos.escenarioItemEquilibrio : {}),
-                      ...(esOptimista ? estilos.escenarioItemOptimista : {})
-                    }}
-                    className={esPasoEquilibrio ? 'tour-resaltado' : ''}
-                    id={esEquilibrio ? 'cuadro-escenario-equilibrio' : `cuadro-escenario-${index}`}
-                  >
-                    <div style={estilos.escenarioEncabezado}>
-                      <span style={{
-                        ...estilos.escenarioBadge,
-                        ...(esEquilibrio ? estilos.badgeEquilibrio : {}),
-                        ...(esOptimista ? estilos.badgeOptimista : {})
-                      }}>{escenario.nombreEscenario}</span>
-                      <strong style={estilos.escenarioBolsas}>{escenario.volumenBolsas} bolsas</strong>
-                    </div>
+                  <div key={index} style={estilos.bloqueFilaConMascota}>
+                    <div
+                      style={{
+                        ...estilos.escenarioItem,
+                        ...(esEquilibrio ? estilos.escenarioItemEquilibrio : {}),
+                        ...(esOptimista ? estilos.escenarioItemOptimista : {})
+                      }}
+                      className={esPasoEquilibrio ? 'tour-resaltado' : ''}
+                      id={esEquilibrio ? 'cuadro-escenario-equilibrio' : `cuadro-escenario-${index}`}
+                    >
+                      <div style={estilos.escenarioEncabezado}>
+                        <span style={{
+                          ...estilos.escenarioBadge,
+                          ...(esEquilibrio ? estilos.badgeEquilibrio : {}),
+                          ...(esOptimista ? estilos.badgeOptimista : {})
+                        }}>{escenario.nombreEscenario}</span>
+                        <strong style={estilos.escenarioBolsas}>{escenario.volumenBolsas} bolsas</strong>
+                      </div>
 
-                    <div style={estilos.escenarioCuerpo}>
-                      <div style={estilos.escenarioDetalle}>
-                        <span>Ventas (Ingresos):</span>
-                        <strong>S/ {escenario.ingresosBrutos.toFixed(2)}</strong>
-                      </div>
-                      <div style={estilos.escenarioDetalle}>
-                        <span>(-) Costo de Producción:</span>
-                        <strong>S/ {escenario.costoDirecto.toFixed(2)}</strong>
-                      </div>
-                      <div style={estilos.escenarioDetalle}>
-                        <span>(-) Gastos Fijos (CIF):</span>
-                        <strong>S/ {escenario.costosIndirectos.toFixed(2)}</strong>
-                      </div>
-                      <div style={estilos.divisorEscenario}></div>
-                      <div style={estilos.escenarioDetalleTotal}>
-                        <span>UTILIDAD NETA OPERATIVA:</span>
-                        <strong style={{
-                          color: esEquilibrio ? 'var(--chocolate-oscuro)' : 'var(--verde-arveja)',
-                          fontWeight: '900'
-                        }}>
-                          S/ {escenario.utilidadNeta.toFixed(2)}
-                        </strong>
-                      </div>
-                      <div style={estilos.escenarioDetalle}>
-                        <span>Margen de Ganancia:</span>
-                        <strong style={{ color: esEquilibrio ? 'var(--chocolate-oscuro)' : 'var(--verde-arveja)' }}>
-                          {escenario.margenUtilidadPorcentaje.toFixed(1)}%
-                        </strong>
+                      <div style={estilos.escenarioCuerpo}>
+                        <div style={estilos.escenarioDetalle}>
+                          <span>Ventas (Ingresos):</span>
+                          <strong>S/ {escenario.ingresosBrutos.toFixed(2)}</strong>
+                        </div>
+                        <div style={estilos.escenarioDetalle}>
+                          <span>(-) Costo de Producción:</span>
+                          <strong>S/ {escenario.costoDirecto.toFixed(2)}</strong>
+                        </div>
+                        <div style={estilos.escenarioDetalle}>
+                          <span>(-) Gastos Fijos (CIF):</span>
+                          <strong>S/ {escenario.costosIndirectos.toFixed(2)}</strong>
+                        </div>
+                        <div style={estilos.divisorEscenario}></div>
+                        <div style={estilos.escenarioDetalleTotal}>
+                          <span>UTILIDAD NETA OPERATIVA:</span>
+                          <strong style={{
+                            color: esEquilibrio ? 'var(--chocolate-oscuro)' : 'var(--verde-arveja)',
+                            fontWeight: '900'
+                          }}>
+                            S/ {escenario.utilidadNeta.toFixed(2)}
+                          </strong>
+                        </div>
+                        <div style={estilos.escenarioDetalle}>
+                          <span>Margen de Ganancia:</span>
+                          <strong style={{ color: esEquilibrio ? 'var(--chocolate-oscuro)' : 'var(--verde-arveja)' }}>
+                            {escenario.margenUtilidadPorcentaje.toFixed(1)}%
+                          </strong>
+                        </div>
                       </div>
                     </div>
+                    
+                    {esPasoEquilibrio && (
+                      <div style={estilos.mascotaCompactaFila}>
+                        <AsistenteMascota
+                          pestanaActiva="proyecciones"
+                          tourActivo={true}
+                          pasoTour={7}
+                          onSiguiente={onSiguiente}
+                          onAnterior={onAnterior}
+                          onDetener={onDetener}
+                          compacto={true}
+                        />
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -215,6 +237,20 @@ export const TabProyecciones: React.FC<TabProyeccionesProps> = ({
               </div>
             )}
 
+            {tourActivo && pasoTour === 8 && (
+              <div style={estilos.mascotaCompactaLote}>
+                <AsistenteMascota
+                  pestanaActiva="proyecciones"
+                  tourActivo={true}
+                  pasoTour={8}
+                  onSiguiente={onSiguiente}
+                  onAnterior={onAnterior}
+                  onDetener={onDetener}
+                  compacto={true}
+                />
+              </div>
+            )}
+
           </div>
         </div>
 
@@ -271,6 +307,22 @@ const estilos = {
     flexDirection: 'column' as const,
     gap: '20px',
     flexGrow: 1,
+  },
+  bloqueFilaConMascota: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '10px',
+    width: '100%',
+  },
+  mascotaCompactaFila: {
+    borderLeft: '3px solid var(--verde-arveja)',
+    paddingLeft: '15px',
+    marginTop: '2px',
+  },
+  mascotaCompactaLote: {
+    marginTop: '20px',
+    borderTop: '2px dashed var(--verde-arveja)',
+    paddingTop: '15px',
   },
   escenarioItem: {
     background: 'var(--chocolate-muy-claro)',

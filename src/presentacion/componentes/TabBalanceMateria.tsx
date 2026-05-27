@@ -1,19 +1,26 @@
 import React from 'react';
 import { Lote } from '../../dominio/entidades/Lote';
 import { Galleta } from '../../dominio/entidades/Galleta';
+import AsistenteMascota from './AsistenteMascota';
 
 interface TabBalanceMateriaProps {
   balanceLote: Lote;
   galletaEstandar: Galleta;
   tourActivo?: boolean;
   pasoTour?: number;
+  onSiguiente?: () => void;
+  onAnterior?: () => void;
+  onDetener?: () => void;
 }
 
 export const TabBalanceMateria: React.FC<TabBalanceMateriaProps> = ({
   balanceLote,
   galletaEstandar,
-  tourActivo,
-  pasoTour,
+  tourActivo = false,
+  pasoTour = 0,
+  onSiguiente = () => {},
+  onAnterior = () => {},
+  onDetener = () => {},
 }) => {
   return (
     <div className="animar-aparicion" style={estilos.contenedor} id="seccion-balance-materia">
@@ -29,30 +36,60 @@ export const TabBalanceMateria: React.FC<TabBalanceMateriaProps> = ({
           
           <div style={estilos.flujoContenedor}>
             
-            <div
-              style={estilos.flujoFila}
-              className={tourActivo && pasoTour === 0 ? 'tour-resaltado' : ''}
-              id="cuadro-lote-bruto"
-            >
-              <div style={estilos.flujoEtiqueta}>
-                <strong>Masa Bruta del Lote</strong>
-                <span>(Sólidos + Líquidos mezclados)</span>
+            <div style={estilos.bloqueFilaConMascota}>
+              <div
+                style={estilos.flujoFila}
+                className={tourActivo && pasoTour === 0 ? 'tour-resaltado' : ''}
+                id="cuadro-lote-bruto"
+              >
+                <div style={estilos.flujoEtiqueta}>
+                  <strong>Masa Bruta del Lote</strong>
+                  <span>(Sólidos + Líquidos mezclados)</span>
+                </div>
+                <div style={estilos.flujoValorPositive}>{balanceLote.masaBrutaGramos.toFixed(2)} g</div>
               </div>
-              <div style={estilos.flujoValorPositive}>{balanceLote.masaBrutaGramos.toFixed(2)} g</div>
+              {tourActivo && pasoTour === 0 && (
+                <div style={estilos.mascotaCompactaFila}>
+                  <AsistenteMascota
+                    pestanaActiva="balance"
+                    tourActivo={true}
+                    pasoTour={0}
+                    onSiguiente={onSiguiente}
+                    onAnterior={onAnterior}
+                    onDetener={onDetener}
+                    compacto={true}
+                  />
+                </div>
+              )}
             </div>
 
             <div style={estilos.flechaFlujo}>↓</div>
 
-            <div
-              style={estilos.flujoFilaMerma}
-              className={tourActivo && pasoTour === 1 ? 'tour-resaltado' : ''}
-              id="cuadro-lote-merma"
-            >
-              <div style={estilos.flujoEtiqueta}>
-                <strong>Merma por Horneado ({balanceLote.mermaPorcentaje}%)</strong>
-                <span>(Deshidratación y evaporación de agua)</span>
+            <div style={estilos.bloqueFilaConMascota}>
+              <div
+                style={estilos.flujoFilaMerma}
+                className={tourActivo && pasoTour === 1 ? 'tour-resaltado' : ''}
+                id="cuadro-lote-merma"
+              >
+                <div style={estilos.flujoEtiqueta}>
+                  <strong>Merma por Horneado ({balanceLote.mermaPorcentaje}%)</strong>
+                  <span>(Deshidratación y evaporación de agua)</span>
+                </div>
+                <div style={estilos.flujoValorNegative}>{balanceLote.mermaGramos.toFixed(2)} g</div>
               </div>
-              <div style={estilos.flujoValorNegative}>{balanceLote.mermaGramos.toFixed(2)} g</div>
+              {tourActivo && pasoTour === 1 && (
+                <div style={estilos.mascotaCompactaFila}>
+                  <AsistenteMascota
+                    pestanaActiva="balance"
+                    tourActivo={true}
+                    pasoTour={1}
+                    onSiguiente={onSiguiente}
+                    onAnterior={onAnterior}
+                    onDetener={onDetener}
+                    compacto={true}
+                  />
+                </div>
+              )}
             </div>
 
             <div style={estilos.flechaFlujo}>↓</div>
@@ -140,6 +177,20 @@ export const TabBalanceMateria: React.FC<TabBalanceMateriaProps> = ({
               <span>Bolsas Exactas (Sin saldos)</span>
             </div>
           </div>
+
+          {tourActivo && pasoTour === 2 && (
+            <div style={estilos.mascotaCompactaLote}>
+              <AsistenteMascota
+                pestanaActiva="balance"
+                tourActivo={true}
+                pasoTour={2}
+                onSiguiente={onSiguiente}
+                onAnterior={onAnterior}
+                onDetener={onDetener}
+                compacto={true}
+              />
+            </div>
+          )}
           
         </div>
 
@@ -188,6 +239,22 @@ const estilos = {
     flexDirection: 'column' as const,
     gap: '4px',
     flexGrow: 1,
+  },
+  bloqueFilaConMascota: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '10px',
+    width: '100%',
+  },
+  mascotaCompactaFila: {
+    paddingLeft: '15px',
+    borderLeft: '3px solid var(--verde-arveja)',
+    marginTop: '2px',
+  },
+  mascotaCompactaLote: {
+    marginTop: '20px',
+    borderTop: '2px dashed var(--verde-arveja)',
+    paddingTop: '15px',
   },
   flujoFila: {
     display: 'flex',

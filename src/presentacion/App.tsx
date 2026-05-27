@@ -79,15 +79,17 @@ export const App: React.FC = () => {
         </button>
       </div>
 
-      {/* Asistente Virtual: Arvejito explicativo */}
-      <AsistenteMascota
-        pestanaActiva={pestanaActiva}
-        tourActivo={tourActivo}
-        pasoTour={pasoTour}
-        onSiguiente={siguientePasoTour}
-        onAnterior={anteriorPasoTour}
-        onDetener={detenerTour}
-      />
+      {/* Asistente Virtual: Arvejito explicativo (solo visible en modo estático convencional si NO está activo el tour) */}
+      {!tourActivo && (
+        <AsistenteMascota
+          pestanaActiva={pestanaActiva}
+          tourActivo={false}
+          pasoTour={0}
+          onSiguiente={() => {}}
+          onAnterior={() => {}}
+          onDetener={() => {}}
+        />
+      )}
 
       {/* Renderizado Dinámico de la Pestaña Activa con Props de Tour */}
       <main style={estilos.main}>
@@ -97,6 +99,9 @@ export const App: React.FC = () => {
             galletaEstandar={galletaEstandar}
             tourActivo={tourActivo}
             pasoTour={pasoTour}
+            onSiguiente={siguientePasoTour}
+            onAnterior={anteriorPasoTour}
+            onDetener={detenerTour}
           />
         )}
 
@@ -107,6 +112,9 @@ export const App: React.FC = () => {
             pesoTotalIngredientes={pesoTotalIngredientes}
             tourActivo={tourActivo}
             pasoTour={pasoTour}
+            onSiguiente={siguientePasoTour}
+            onAnterior={anteriorPasoTour}
+            onDetener={detenerTour}
           />
         )}
 
@@ -115,6 +123,9 @@ export const App: React.FC = () => {
             desgloseCostosUnitarios={desgloseCostosUnitarios}
             tourActivo={tourActivo}
             pasoTour={pasoTour}
+            onSiguiente={siguientePasoTour}
+            onAnterior={anteriorPasoTour}
+            onDetener={detenerTour}
           />
         )}
 
@@ -127,6 +138,9 @@ export const App: React.FC = () => {
             obtenerEnlaceWhatsAppPedidoEspecifico={obtenerEnlaceWhatsAppPedidoEspecifico}
             tourActivo={tourActivo}
             pasoTour={pasoTour}
+            onSiguiente={siguientePasoTour}
+            onAnterior={anteriorPasoTour}
+            onDetener={detenerTour}
           />
         )}
       </main>

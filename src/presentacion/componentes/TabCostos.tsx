@@ -1,15 +1,22 @@
 import React from 'react';
+import AsistenteMascota from './AsistenteMascota';
 
 interface TabCostosProps {
   desgloseCostosUnitarios: { nombre: string; valor: number; porcentaje: number }[];
   tourActivo?: boolean;
   pasoTour?: number;
+  onSiguiente?: () => void;
+  onAnterior?: () => void;
+  onDetener?: () => void;
 }
 
 export const TabCostos: React.FC<TabCostosProps> = ({
   desgloseCostosUnitarios,
-  tourActivo,
-  pasoTour,
+  tourActivo = false,
+  pasoTour = 0,
+  onSiguiente = () => {},
+  onAnterior = () => {},
+  onDetener = () => {},
 }) => {
   const precioSugerido = 2.00;
   const costoTotalProduccion = 1.57;
@@ -61,21 +68,52 @@ export const TabCostos: React.FC<TabCostosProps> = ({
           </div>
 
           <div style={estilos.bloqueTotales}>
-            <div
-              style={estilos.totalFila}
-              className={tourActivo && pasoTour === 5 ? 'tour-resaltado' : ''}
-              id="cuadro-costo-produccion"
-            >
-              <span>COSTO TOTAL PRODUCCIÓN:</span>
-              <strong style={estilos.totalValor}>S/ {costoTotalProduccion.toFixed(2)} (78.7%)</strong>
+            <div style={estilos.bloqueFilaConMascota}>
+              <div
+                style={estilos.totalFila}
+                className={tourActivo && pasoTour === 5 ? 'tour-resaltado' : ''}
+                id="cuadro-costo-produccion"
+              >
+                <span>COSTO TOTAL PRODUCCIÓN:</span>
+                <strong style={estilos.totalValor}>S/ {costoTotalProduccion.toFixed(2)} (78.7%)</strong>
+              </div>
+              {tourActivo && pasoTour === 5 && (
+                <div style={estilos.mascotaCompactaFila}>
+                  <AsistenteMascota
+                    pestanaActiva="costos"
+                    tourActivo={true}
+                    pasoTour={5}
+                    onSiguiente={onSiguiente}
+                    onAnterior={onAnterior}
+                    onDetener={onDetener}
+                    compacto={true}
+                  />
+                </div>
+              )}
             </div>
-            <div
-              style={estilos.totalFilaDestacada}
-              className={tourActivo && pasoTour === 6 ? 'tour-resaltado' : ''}
-              id="cuadro-pvp-destacado"
-            >
-              <span>PRECIO DE VENTA AL PÚBLICO (PVP):</span>
-              <strong style={estilos.totalValorDestacado}>S/ {precioSugerido.toFixed(2)} (100.0%)</strong>
+
+            <div style={estilos.bloqueFilaConMascota}>
+              <div
+                style={estilos.totalFilaDestacada}
+                className={tourActivo && pasoTour === 6 ? 'tour-resaltado' : ''}
+                id="cuadro-pvp-destacado"
+              >
+                <span>PRECIO DE VENTA AL PÚBLICO (PVP):</span>
+                <strong style={estilos.totalValorDestacado}>S/ {precioSugerido.toFixed(2)} (100.0%)</strong>
+              </div>
+              {tourActivo && pasoTour === 6 && (
+                <div style={estilos.mascotaCompactaFila}>
+                  <AsistenteMascota
+                    pestanaActiva="costos"
+                    tourActivo={true}
+                    pasoTour={6}
+                    onSiguiente={onSiguiente}
+                    onAnterior={onAnterior}
+                    onDetener={onDetener}
+                    compacto={true}
+                  />
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -237,6 +275,17 @@ const estilos = {
     display: 'flex',
     flexDirection: 'column' as const,
     gap: '10px',
+  },
+  bloqueFilaConMascota: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: '10px',
+    width: '100%',
+  },
+  mascotaCompactaFila: {
+    borderLeft: '3px solid var(--verde-arveja)',
+    paddingLeft: '15px',
+    marginTop: '2px',
   },
   totalFila: {
     display: 'flex',

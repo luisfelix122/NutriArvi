@@ -9,7 +9,7 @@ export const BotonFlotanteWhatsApp: React.FC<BotonFlotanteWhatsAppProps> = ({ en
     <div style={estilos.contenedor} id="boton-whatsapp-flotante-caja">
       {/* Tooltip con llamado a la acción */}
       <div style={estilos.tooltip} id="whatsapp-flotante-tooltip">
-        🌟 ¡Pedí tus galletas acá!
+        🌟 ¡Pide tus galletas aquí!
       </div>
       
       <a
